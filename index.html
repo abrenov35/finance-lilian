@@ -219,8 +219,31 @@ function setType(t) {
   document.getElementById("bsave").className="btn-save "+t;
 }
 
-function saveRow() {
-  var date=document.getElementById("n-date").value;
+const newRow = {
+  id: Date.now(),
+  date: fmtDate(date),
+  lbl: lbl,
+  cpt: cpt,
+  dep: opType === "cr" ? mnt : 0,
+  pai: opType === "db" ? mnt : 0
+};
+
+fetch(API_URL, {
+  method: "POST",
+  body: JSON.stringify(newRow)
+})
+.then(r => r.text())
+.then(() => {
+
+  rows.push(newRow);
+
+  render();
+
+})
+.catch(err => {
+  console.error(err);
+  showAlert("Erreur Apps Script");
+});  var date=document.getElementById("n-date").value;
   var lbl =document.getElementById("n-lbl").value.trim();
   var cpt =document.getElementById("n-cpt").value;
   var mnt =parseFloat(document.getElementById("n-mnt").value);
@@ -302,5 +325,8 @@ function showAlert(msg) {
 document.addEventListener("keydown",function(e){ if(e.key==="Enter"&&document.activeElement.closest(".fbody")) saveRow(); });
 render();
 </script>
+var rows   = [];
+var opType = "cr";
+const API_URL = "https://script.google.com/macros/s/AKfycbwen7DkhxlCegPHV5fBKNaOUEh64wHOWTAI-ANEqOR-jvbigFBXooMLPc53vK1e378/exec";
 </body>
 </html>

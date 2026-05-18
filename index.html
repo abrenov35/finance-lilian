@@ -17,8 +17,6 @@
   -webkit-font-smoothing:antialiased;
 }
 body { background:var(--bg); color:var(--ink); min-height:100dvh; }
-
-/* HERO */
 .hero { background:linear-gradient(140deg,#0b1e38 0%,#123566 55%,#0c3d52 100%); padding:18px 18px 0; }
 .hero-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
 .brand { font-size:13px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:rgba(255,255,255,.9); }
@@ -36,8 +34,6 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
 .hstat-v { font-size:16px; font-weight:700; color:#fff; }
 .hstat-v.cr { color:#5eead4; }
 .hstat-v.db { color:#fb9aa8; }
-
-/* SYNC BAR */
 .sync-bar { background:rgba(0,0,0,.18); border-top:1px solid rgba(255,255,255,.07); padding:7px 18px; display:flex; align-items:center; gap:8px; }
 .sdot { width:7px; height:7px; border-radius:50%; flex-shrink:0; transition:background .3s; }
 .sdot.ok  { background:#5eead4; }
@@ -47,26 +43,11 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
 .stxt { font-size:11px; color:rgba(255,255,255,.5); flex:1; }
 .sbtn { font-size:11px; font-weight:600; color:rgba(255,255,255,.6); background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:5px; padding:3px 10px; cursor:pointer; }
 .sbtn:hover { background:rgba(255,255,255,.16); }
-
-/* TABS */
 .tabbar { display:grid; grid-template-columns:1fr 1fr; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:99; box-shadow:0 2px 6px rgba(0,0,0,.06); }
 .tab { padding:13px 10px; text-align:center; font-size:13px; font-weight:600; color:var(--ink-3); border:none; background:none; cursor:pointer; border-bottom:2.5px solid transparent; transition:color .14s,border-color .14s; }
 .tab.on { color:var(--indigo); border-bottom-color:var(--indigo); }
-
-/* PAGES */
 .page { display:none; padding:14px; }
 .page.on { display:block; }
-
-/* CONFIG BANNER */
-.cfg { background:#fef3c7; border:1px solid #f59e0b; border-radius:var(--r); padding:14px 16px; margin-bottom:14px; }
-.cfg-title { font-size:13px; font-weight:700; color:#92400e; margin-bottom:6px; }
-.cfg-txt { font-size:12px; color:#92400e; line-height:1.55; }
-.cfg-input { margin-top:10px; width:100%; font-family:inherit; font-size:13px; padding:9px 11px; border:1.5px solid #f59e0b; border-radius:7px; background:#fff; color:var(--ink); outline:none; }
-.cfg-input:focus { border-color:#d97706; box-shadow:0 0 0 3px rgba(217,119,6,.15); }
-.cfg-ok { margin-top:8px; width:100%; padding:11px; background:#d97706; color:#fff; border:none; border-radius:7px; font-weight:700; font-size:13px; cursor:pointer; }
-.cfg-ok:hover { background:#b45309; }
-
-/* FORM CARD */
 .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--rl); box-shadow:var(--sh); overflow:hidden; }
 .type-row { display:grid; grid-template-columns:1fr 1fr; }
 .tbtn { padding:15px 8px; font-size:13px; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:background .18s,color .18s,opacity .18s; }
@@ -93,8 +74,6 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
 .btn-save:disabled { opacity:.5; cursor:not-allowed; }
 .alert { padding:10px 13px; border-radius:var(--r); font-size:13px; font-weight:600; background:var(--amber-bg); color:var(--amber); border:1px solid #fcd34d; display:none; text-align:center; }
 .alert.on { display:block; }
-
-/* OP LIST */
 .rhead { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
 .rtitle { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
 .rcnt { font-size:11px; font-weight:600; background:var(--border); color:var(--ink-3); padding:3px 9px; border-radius:99px; }
@@ -121,8 +100,6 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
 .opdel:disabled { opacity:.4; cursor:not-allowed; }
 .empty { text-align:center; padding:48px 20px; color:var(--ink-4); }
 .empty-ico { font-size:32px; margin-bottom:10px; }
-
-/* DESKTOP */
 @media (min-width:680px) {
   .hero { padding:26px 28px 0; }
   .hero-amount { font-size:56px; }
@@ -163,7 +140,7 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
 </div>
 <div class="sync-bar">
   <div class="sdot go" id="sdot"></div>
-  <div class="stxt"    id="stxt">En attente de configuration…</div>
+  <div class="stxt" id="stxt">Connexion…</div>
   <button class="sbtn" onclick="loadData()">↻ Actualiser</button>
 </div>
 
@@ -172,20 +149,9 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
   <button class="tab"    id="tab-r" onclick="goTab('r')">📋 Relevé</button>
 </div>
 
-<!-- PAGE SAISIE -->
 <div class="page on" id="pg-s">
   <div class="desk">
     <div>
-      <div class="cfg" id="cfg" style="display:none">
-        <div class="cfg-title">⚙️ Première connexion</div>
-        <div class="cfg-txt">
-          Collez ci-dessous l'URL de votre Apps Script déployé.<br>
-          (Extensions → Apps Script → Déployer → URL de déploiement)
-        </div>
-        <input class="cfg-input" type="url" id="cfg-url" placeholder="https://script.google.com/macros/s/…/exec">
-        <button class="cfg-ok" onclick="connectSheet()">Connecter à Google Sheets</button>
-      </div>
-
       <div class="card">
         <div class="type-row">
           <button class="tbtn cr on" id="bcr" onclick="setType('cr')">↑ Dépôt Lilian</button>
@@ -215,7 +181,6 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
         </div>
       </div>
     </div>
-
     <div class="rside">
       <div class="rhead"><div class="rtitle">Opérations</div><div class="rcnt" id="rcnt-d">—</div></div>
       <div class="oplist" id="list-d"></div>
@@ -223,37 +188,31 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
   </div>
 </div>
 
-<!-- PAGE RELEVÉ (mobile) -->
 <div class="page" id="pg-r">
   <div class="rhead"><div class="rtitle">Opérations</div><div class="rcnt" id="rcnt-m">—</div></div>
   <div class="oplist" id="list-m"></div>
 </div>
 
 <script>
-var API_URL = "https://script.google.com/macros/s/AKfycbwA5OYcL0z5hHHn1r7zuCf3cdiO8skVulSe36JtOfvWUIGJLZoTOCLa03eqBqzoHoZ1/exec";
-var rows    = [];
-var opType  = "cr";
+var API = "https://script.google.com/macros/s/AKfycbwA5OYcL0z5hHHn1r7zuCf3cdiO8skVulSe36JtOfvWUIGJLZoTOCLa03eqBqzoHoZ1/exec";
+var rows   = [];
+var opType = "cr";
 
-// ── Helpers ──────────────────────────────────────────────────────
 function todayISO() {
   var d=new Date(), mm=String(d.getMonth()+1).padStart(2,"0"), dd=String(d.getDate()).padStart(2,"0");
   return d.getFullYear()+"-"+mm+"-"+dd;
 }
 function isoToDisplay(iso) {
   if (!iso) return "—";
-  // handles both ISO (YYYY-MM-DD) and already formatted (DD/MM/YYYY)
-  if (iso.indexOf("/") > -1) return iso;
+  if (iso.indexOf("/")>-1) return iso;
   var p=iso.split("-");
-  if (p.length===3) return p[2]+"/"+p[1]+"/"+p[0];
-  return iso;
+  return p.length===3 ? p[2]+"/"+p[1]+"/"+p[0] : iso;
 }
 function isoToSheet(iso) {
-  // convert YYYY-MM-DD → DD/MM/YYYY for storage
   if (!iso) return "";
-  if (iso.indexOf("/") > -1) return iso;
+  if (iso.indexOf("/")>-1) return iso;
   var p=iso.split("-");
-  if (p.length===3) return p[2]+"/"+p[1]+"/"+p[0];
-  return iso;
+  return p.length===3 ? p[2]+"/"+p[1]+"/"+p[0] : iso;
 }
 function fmtMoney(n) {
   var s=Math.abs(n).toFixed(2).replace(".",",");
@@ -263,7 +222,6 @@ function fmtMoney(n) {
 }
 function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-// ── Init ─────────────────────────────────────────────────────────
 document.getElementById("n-date").value = todayISO();
 (function(){
   var months=["jan.","fév.","mar.","avr.","mai","jun.","jul.","aoû.","sep.","oct.","nov.","déc."];
@@ -271,43 +229,45 @@ document.getElementById("n-date").value = todayISO();
   document.getElementById("hdate").textContent=d.getDate()+" "+months[d.getMonth()]+" "+d.getFullYear();
 })();
 
-// ── Sync status ───────────────────────────────────────────────────
-function sync(state, msg) {
+function sync(state,msg) {
   document.getElementById("sdot").className="sdot "+state;
   document.getElementById("stxt").textContent=msg;
 }
 
-// ── Connect ───────────────────────────────────────────────────────
-function connectSheet() {
-  var v=document.getElementById("cfg-url").value.trim();
-  if (!v.startsWith("https://script.google.com")) return showAlert("URL invalide");
-  API_URL=v;
-  document.getElementById("cfg").style.display="none";
-  loadData();
+function goTab(t) {
+  document.getElementById("pg-s").classList.toggle("on",t==="s");
+  document.getElementById("pg-r").classList.toggle("on",t==="r");
+  document.getElementById("tab-s").classList.toggle("on",t==="s");
+  document.getElementById("tab-r").classList.toggle("on",t==="r");
 }
 
-// ── Load ──────────────────────────────────────────────────────────
+function setType(t) {
+  opType=t;
+  document.getElementById("bcr").className="tbtn cr"+(t==="cr"?" on":"");
+  document.getElementById("bdb").className="tbtn db"+(t==="db"?" on":"");
+  document.getElementById("bsave").className="btn-save "+t;
+}
+
+// ── Charger depuis Google Sheets ──────────────────────────────────
 function loadData() {
-  if (!API_URL) { sync("err","⚙️ Collez l'URL Apps Script ci-dessus"); return; }
-  sync("go","Connexion à Google Sheets…");
-  fetch(API_URL+"?t="+Date.now())
+  sync("go","Chargement…");
+  fetch(API+"?action=get&t="+Date.now())
     .then(function(r){ return r.json(); })
     .then(function(data){
       if (data.error) { sync("err","Erreur : "+data.error); return; }
-      rows=data.rows||[];
+      rows = data.rows || [];
       sync("ok","Synchronisé · "+isoToDisplay(todayISO()));
       render();
     })
-    .catch(function(){ sync("err","Connexion impossible — vérifiez l'URL du déploiement"); });
+    .catch(function(){ sync("err","Connexion impossible"); });
 }
 
-// ── Save ──────────────────────────────────────────────────────────
+// ── Enregistrer une ligne ─────────────────────────────────────────
 function saveRow() {
-  if (!API_URL) return showAlert("Connectez d'abord le Google Sheet");
-  var date=document.getElementById("n-date").value;
-  var lbl =document.getElementById("n-lbl").value.trim();
-  var cpt =document.getElementById("n-cpt").value;
-  var mnt =parseFloat(document.getElementById("n-mnt").value);
+  var date = document.getElementById("n-date").value;
+  var lbl  = document.getElementById("n-lbl").value.trim();
+  var cpt  = document.getElementById("n-cpt").value;
+  var mnt  = parseFloat(document.getElementById("n-mnt").value);
   if (!date)        return showAlert("Date manquante");
   if (!lbl)         return showAlert("Libellé manquant");
   if (!cpt)         return showAlert("Compte non sélectionné");
@@ -317,15 +277,26 @@ function saveRow() {
   btn.disabled=true; btn.textContent="Enregistrement…";
   sync("go","Envoi vers Google Sheets…");
 
-  var rowData={ date:isoToSheet(date), lbl:lbl, cpt:cpt, dep:opType==="cr"?mnt:0, pai:opType==="db"?mnt:0 };
+  var dep = opType==="cr" ? mnt : 0;
+  var pai = opType==="db" ? mnt : 0;
 
-  fetch(API_URL, { method:"POST", body:JSON.stringify({ action:"add", row:rowData }) })
+  // Tout en GET — pas de problème CORS
+  var url = API
+    + "?action=add"
+    + "&date=" + encodeURIComponent(isoToSheet(date))
+    + "&lbl="  + encodeURIComponent(lbl)
+    + "&cpt="  + encodeURIComponent(cpt)
+    + "&dep="  + dep
+    + "&pai="  + pai
+    + "&t="    + Date.now();
+
+  fetch(url)
     .then(function(r){ return r.json(); })
     .then(function(data){
       btn.disabled=false; setType(opType);
       if (data.error) { sync("err","Erreur : "+data.error); showAlert(data.error); return; }
-      rowData.id=data.id;
-      rows.push(rowData);
+      // Ajout local immédiat sans recharger
+      rows.push({ id:data.id, date:isoToSheet(date), lbl:lbl, cpt:cpt, dep:dep, pai:pai });
       document.getElementById("n-lbl").value="";
       document.getElementById("n-mnt").value="";
       document.getElementById("n-cpt").value="";
@@ -339,12 +310,12 @@ function saveRow() {
     });
 }
 
-// ── Delete ────────────────────────────────────────────────────────
+// ── Supprimer ─────────────────────────────────────────────────────
 function delRow(id, el) {
   if (!confirm("Supprimer cette opération ?")) return;
   el.disabled=true;
   sync("go","Suppression…");
-  fetch(API_URL, { method:"POST", body:JSON.stringify({ action:"del", id:id }) })
+  fetch(API+"?action=del&id="+id+"&t="+Date.now())
     .then(function(r){ return r.json(); })
     .then(function(data){
       if (data.error) { sync("err","Erreur : "+data.error); el.disabled=false; return; }
@@ -355,27 +326,14 @@ function delRow(id, el) {
     .catch(function(){ el.disabled=false; sync("err","Erreur réseau"); });
 }
 
-// ── Tabs & Type ───────────────────────────────────────────────────
-function goTab(t) {
-  document.getElementById("pg-s").classList.toggle("on",t==="s");
-  document.getElementById("pg-r").classList.toggle("on",t==="r");
-  document.getElementById("tab-s").classList.toggle("on",t==="s");
-  document.getElementById("tab-r").classList.toggle("on",t==="r");
-}
-function setType(t) {
-  opType=t;
-  document.getElementById("bcr").className="tbtn cr"+(t==="cr"?" on":"");
-  document.getElementById("bdb").className="tbtn db"+(t==="db"?" on":"");
-  document.getElementById("bsave").className="btn-save "+t;
-}
-
-// ── Render ────────────────────────────────────────────────────────
+// ── Rendu des cartes ──────────────────────────────────────────────
 function buildList(id) {
-  var sorted=rows.slice().sort(function(a,b){
-    // sort by date string DD/MM/YYYY → compare as YYYYMMDD
-    function key(s){ if(!s) return ""; var p=s.split("/"); return p.length===3?p[2]+p[1]+p[0]:s; }
-    return key(a.date)<key(b.date)?-1:key(a.date)>key(b.date)?1:0;
-  });
+  function sortKey(s) {
+    if (!s) return "";
+    var p=s.split("/");
+    return p.length===3 ? p[2]+p[1]+p[0] : s;
+  }
+  var sorted=rows.slice().sort(function(a,b){ return sortKey(a.date)<sortKey(b.date)?-1:sortKey(a.date)>sortKey(b.date)?1:0; });
   if (!sorted.length) {
     document.getElementById(id).innerHTML='<div class="empty"><div class="empty-ico">🗂️</div><div>Aucune opération</div></div>';
     return;
@@ -403,15 +361,10 @@ function buildList(id) {
 }
 
 function render() {
-  var sorted=rows.slice().sort(function(a,b){
-    function key(s){ if(!s) return ""; var p=s.split("/"); return p.length===3?p[2]+p[1]+p[0]:s; }
-    return key(a.date)<key(b.date)?-1:key(a.date)>key(b.date)?1:0;
-  });
-  var cumul=0, totD=0, totP=0;
-  for (var i=0;i<sorted.length;i++) {
-    var d=parseFloat(sorted[i].dep)||0, p=parseFloat(sorted[i].pai)||0;
-    cumul+=d-p; totD+=d; totP+=p;
-  }
+  function sortKey(s) { var p=(s||"").split("/"); return p.length===3?p[2]+p[1]+p[0]:s; }
+  var sorted=rows.slice().sort(function(a,b){ return sortKey(a.date)<sortKey(b.date)?-1:sortKey(a.date)>sortKey(b.date)?1:0; });
+  var cumul=0,totD=0,totP=0;
+  for (var i=0;i<sorted.length;i++) { var d=parseFloat(sorted[i].dep)||0,p=parseFloat(sorted[i].pai)||0; cumul+=d-p; totD+=d; totP+=p; }
   var amt=document.getElementById("h-amt");
   amt.textContent=(cumul<0?"-":"")+fmtMoney(Math.abs(cumul));
   amt.className="hero-amount"+(cumul>0?" pos":cumul<0?" neg":"");
@@ -426,6 +379,12 @@ function render() {
   document.getElementById("rcnt-m").textContent=cnt;
   buildList("list-d");
   buildList("list-m");
+}
+
+function showAlert(msg) {
+  var el=document.getElementById("alert");
+  el.textContent="⚠ "+msg; el.classList.add("on");
+  setTimeout(function(){ el.classList.remove("on"); },2500);
 }
 
 document.addEventListener("keydown",function(e){ if(e.key==="Enter"&&document.activeElement.closest(".fbody")) saveRow(); });

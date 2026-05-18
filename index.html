@@ -34,15 +34,6 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
 .hstat-v { font-size:16px; font-weight:700; color:#fff; }
 .hstat-v.cr { color:#5eead4; }
 .hstat-v.db { color:#fb9aa8; }
-.sync-bar { background:rgba(0,0,0,.18); border-top:1px solid rgba(255,255,255,.07); padding:7px 18px; display:flex; align-items:center; gap:8px; }
-.sdot { width:7px; height:7px; border-radius:50%; flex-shrink:0; transition:background .3s; }
-.sdot.ok  { background:#5eead4; }
-.sdot.err { background:#fb9aa8; }
-.sdot.go  { background:#fbbf24; animation:blink .7s ease-in-out infinite alternate; }
-@keyframes blink { from{opacity:.3} to{opacity:1} }
-.stxt { font-size:11px; color:rgba(255,255,255,.5); flex:1; }
-.sbtn { font-size:11px; font-weight:600; color:rgba(255,255,255,.6); background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:5px; padding:3px 10px; cursor:pointer; }
-.sbtn:hover { background:rgba(255,255,255,.16); }
 .tabbar { display:grid; grid-template-columns:1fr 1fr; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:99; box-shadow:0 2px 6px rgba(0,0,0,.06); }
 .tab { padding:13px 10px; text-align:center; font-size:13px; font-weight:600; color:var(--ink-3); border:none; background:none; cursor:pointer; border-bottom:2.5px solid transparent; transition:color .14s,border-color .14s; }
 .tab.on { color:var(--indigo); border-bottom-color:var(--indigo); }
@@ -71,7 +62,6 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
 .btn-save.cr { background:linear-gradient(135deg,#0d7a6f,#10b99e); color:#fff; box-shadow:0 4px 14px rgba(16,185,158,.3); }
 .btn-save.db { background:linear-gradient(135deg,#c0143c,#e83a5a); color:#fff; box-shadow:0 4px 14px rgba(232,58,90,.28); }
 .btn-save:hover { opacity:.9; }
-.btn-save:disabled { opacity:.5; cursor:not-allowed; }
 .alert { padding:10px 13px; border-radius:var(--r); font-size:13px; font-weight:600; background:var(--amber-bg); color:var(--amber); border:1px solid #fcd34d; display:none; text-align:center; }
 .alert.on { display:block; }
 .rhead { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
@@ -97,7 +87,6 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
 .opsolde.neg { color:var(--rose-lt); }
 .opdel { display:block; margin-top:5px; background:none; border:none; cursor:pointer; font-size:11px; color:var(--border-2); padding:2px 0; transition:color .12s; text-align:right; }
 .opdel:hover { color:var(--rose-lt); }
-.opdel:disabled { opacity:.4; cursor:not-allowed; }
 .empty { text-align:center; padding:48px 20px; color:var(--ink-4); }
 .empty-ico { font-size:32px; margin-bottom:10px; }
 @media (min-width:680px) {
@@ -129,7 +118,7 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
   <div class="hero-center">
     <div class="hero-lbl">Solde actuel</div>
     <div class="hero-amount" id="h-amt">—</div>
-    <div class="hero-pill" id="h-pill">chargement…</div>
+    <div class="hero-pill" id="h-pill">—</div>
   </div>
   <div class="hero-stats">
     <div class="hstat"><div class="hstat-lbl">↑ Dépôts</div><div class="hstat-v cr" id="h-dep">—</div></div>
@@ -137,11 +126,6 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
     <div class="hstat hstat-x" style="display:none"><div class="hstat-lbl">Opérations</div><div class="hstat-v" id="h-ops">—</div></div>
     <div class="hstat hstat-x" style="display:none"><div class="hstat-lbl">Dernière op.</div><div class="hstat-v" style="font-size:12px;line-height:1.35" id="h-last">—</div></div>
   </div>
-</div>
-<div class="sync-bar">
-  <div class="sdot go" id="sdot"></div>
-  <div class="stxt" id="stxt">Connexion…</div>
-  <button class="sbtn" onclick="loadData()">↻ Actualiser</button>
 </div>
 
 <div class="tabbar">
@@ -177,7 +161,7 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
             <div class="mwrap"><span class="msym">€</span><input class="finput" type="number" id="n-mnt" placeholder="0,00" min="0.01" step="0.01" inputmode="decimal"></div>
           </div>
           <div class="alert" id="alert"></div>
-          <button class="btn-save cr" id="bsave" onclick="saveRow()">Enregistrer dans Google Sheets</button>
+          <button class="btn-save cr" id="bsave" onclick="saveRow()">Enregistrer</button>
         </div>
       </div>
     </div>
@@ -194,7 +178,6 @@ body { background:var(--bg); color:var(--ink); min-height:100dvh; }
 </div>
 
 <script>
-var API = "https://script.google.com/macros/s/AKfycbwA5OYcL0z5hHHn1r7zuCf3cdiO8skVulSe36JtOfvWUIGJLZoTOCLa03eqBqzoHoZ1/exec";
 var rows   = [];
 var opType = "cr";
 
@@ -202,15 +185,8 @@ function todayISO() {
   var d=new Date(), mm=String(d.getMonth()+1).padStart(2,"0"), dd=String(d.getDate()).padStart(2,"0");
   return d.getFullYear()+"-"+mm+"-"+dd;
 }
-function isoToDisplay(iso) {
+function fmtDate(iso) {
   if (!iso) return "—";
-  if (iso.indexOf("/")>-1) return iso;
-  var p=iso.split("-");
-  return p.length===3 ? p[2]+"/"+p[1]+"/"+p[0] : iso;
-}
-function isoToSheet(iso) {
-  if (!iso) return "";
-  if (iso.indexOf("/")>-1) return iso;
   var p=iso.split("-");
   return p.length===3 ? p[2]+"/"+p[1]+"/"+p[0] : iso;
 }
@@ -229,11 +205,6 @@ document.getElementById("n-date").value = todayISO();
   document.getElementById("hdate").textContent=d.getDate()+" "+months[d.getMonth()]+" "+d.getFullYear();
 })();
 
-function sync(state,msg) {
-  document.getElementById("sdot").className="sdot "+state;
-  document.getElementById("stxt").textContent=msg;
-}
-
 function goTab(t) {
   document.getElementById("pg-s").classList.toggle("on",t==="s");
   document.getElementById("pg-r").classList.toggle("on",t==="r");
@@ -248,112 +219,53 @@ function setType(t) {
   document.getElementById("bsave").className="btn-save "+t;
 }
 
-// ── Charger depuis Google Sheets ──────────────────────────────────
-function loadData() {
-  sync("go","Chargement…");
-  fetch(API+"?action=get&t="+Date.now())
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      if (data.error) { sync("err","Erreur : "+data.error); return; }
-      rows = data.rows || [];
-      sync("ok","Synchronisé · "+isoToDisplay(todayISO()));
-      render();
-    })
-    .catch(function(){ sync("err","Connexion impossible"); });
-}
-
-// ── Enregistrer une ligne ─────────────────────────────────────────
 function saveRow() {
-  var date = document.getElementById("n-date").value;
-  var lbl  = document.getElementById("n-lbl").value.trim();
-  var cpt  = document.getElementById("n-cpt").value;
-  var mnt  = parseFloat(document.getElementById("n-mnt").value);
+  var date=document.getElementById("n-date").value;
+  var lbl =document.getElementById("n-lbl").value.trim();
+  var cpt =document.getElementById("n-cpt").value;
+  var mnt =parseFloat(document.getElementById("n-mnt").value);
   if (!date)        return showAlert("Date manquante");
   if (!lbl)         return showAlert("Libellé manquant");
   if (!cpt)         return showAlert("Compte non sélectionné");
   if (!mnt||mnt<=0) return showAlert("Montant invalide");
-
-  var btn=document.getElementById("bsave");
-  btn.disabled=true; btn.textContent="Enregistrement…";
-  sync("go","Envoi vers Google Sheets…");
-
-  var dep = opType==="cr" ? mnt : 0;
-  var pai = opType==="db" ? mnt : 0;
-
-  // Tout en GET — pas de problème CORS
-  var url = API
-    + "?action=add"
-    + "&date=" + encodeURIComponent(isoToSheet(date))
-    + "&lbl="  + encodeURIComponent(lbl)
-    + "&cpt="  + encodeURIComponent(cpt)
-    + "&dep="  + dep
-    + "&pai="  + pai
-    + "&t="    + Date.now();
-
-  fetch(url)
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      btn.disabled=false; setType(opType);
-      if (data.error) { sync("err","Erreur : "+data.error); showAlert(data.error); return; }
-      // Ajout local immédiat sans recharger
-      rows.push({ id:data.id, date:isoToSheet(date), lbl:lbl, cpt:cpt, dep:dep, pai:pai });
-      document.getElementById("n-lbl").value="";
-      document.getElementById("n-mnt").value="";
-      document.getElementById("n-cpt").value="";
-      sync("ok","✓ Enregistré dans Google Sheets");
-      render();
-      if (window.innerWidth<680) goTab("r");
-    })
-    .catch(function(){
-      btn.disabled=false; setType(opType);
-      sync("err","Erreur réseau"); showAlert("Erreur réseau — réessayez");
-    });
+  rows.push({ id:Date.now(), date:fmtDate(date), lbl:lbl, cpt:cpt,
+    dep:opType==="cr"?mnt:0, pai:opType==="db"?mnt:0 });
+  document.getElementById("n-lbl").value="";
+  document.getElementById("n-mnt").value="";
+  document.getElementById("n-cpt").value="";
+  render();
+  if (window.innerWidth<680) goTab("r");
 }
 
-// ── Supprimer ─────────────────────────────────────────────────────
-function delRow(id, el) {
+function delRow(id) {
   if (!confirm("Supprimer cette opération ?")) return;
-  el.disabled=true;
-  sync("go","Suppression…");
-  fetch(API+"?action=del&id="+id+"&t="+Date.now())
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      if (data.error) { sync("err","Erreur : "+data.error); el.disabled=false; return; }
-      rows=rows.filter(function(r){ return r.id!=id; });
-      sync("ok","✓ Supprimé");
-      render();
-    })
-    .catch(function(){ el.disabled=false; sync("err","Erreur réseau"); });
+  rows=rows.filter(function(r){ return r.id!=id; });
+  render();
 }
 
-// ── Rendu des cartes ──────────────────────────────────────────────
 function buildList(id) {
-  function sortKey(s) {
-    if (!s) return "";
-    var p=s.split("/");
-    return p.length===3 ? p[2]+p[1]+p[0] : s;
-  }
-  var sorted=rows.slice().sort(function(a,b){ return sortKey(a.date)<sortKey(b.date)?-1:sortKey(a.date)>sortKey(b.date)?1:0; });
+  function key(s){ var p=(s||"").split("/"); return p.length===3?p[2]+p[1]+p[0]:s; }
+  var sorted=rows.slice().sort(function(a,b){ return key(a.date)<key(b.date)?-1:key(a.date)>key(b.date)?1:0; });
   if (!sorted.length) {
     document.getElementById(id).innerHTML='<div class="empty"><div class="empty-ico">🗂️</div><div>Aucune opération</div></div>';
     return;
   }
-  var cumul=0, html="";
+  var cumul=0,html="";
   for (var i=0;i<sorted.length;i++) {
     var r=sorted[i];
-    var d=parseFloat(r.dep)||0, p=parseFloat(r.pai)||0;
+    var d=parseFloat(r.dep)||0,p=parseFloat(r.pai)||0;
     cumul+=d-p;
-    var isCr=d>0, cls=isCr?"cr":"db";
+    var isCr=d>0,cls=isCr?"cr":"db";
     html+='<div class="opcard '+cls+'">'+
       '<div class="opico '+cls+'">'+(isCr?"↑":"↓")+'</div>'+
       '<div class="opinfo">'+
         '<div class="oplbl">'+esc(r.lbl)+'</div>'+
-        '<div class="opmeta"><span>'+esc(isoToDisplay(r.date))+'</span><span class="dot2"></span><span>'+esc(r.cpt)+'</span></div>'+
+        '<div class="opmeta"><span>'+esc(r.date)+'</span><span class="dot2"></span><span>'+esc(r.cpt)+'</span></div>'+
       '</div>'+
       '<div class="opright">'+
         '<div class="opmnt '+cls+'">'+(isCr?"+":"−")+fmtMoney(isCr?d:p)+'</div>'+
         '<div class="opsolde '+(cumul>=0?"pos":"neg")+'">solde '+fmtMoney(cumul)+'</div>'+
-        '<button class="opdel" onclick="delRow(\''+r.id+'\',this)">✕ suppr.</button>'+
+        '<button class="opdel" onclick="delRow('+r.id+')">✕ suppr.</button>'+
       '</div>'+
     '</div>';
   }
@@ -361,8 +273,8 @@ function buildList(id) {
 }
 
 function render() {
-  function sortKey(s) { var p=(s||"").split("/"); return p.length===3?p[2]+p[1]+p[0]:s; }
-  var sorted=rows.slice().sort(function(a,b){ return sortKey(a.date)<sortKey(b.date)?-1:sortKey(a.date)>sortKey(b.date)?1:0; });
+  function key(s){ var p=(s||"").split("/"); return p.length===3?p[2]+p[1]+p[0]:s; }
+  var sorted=rows.slice().sort(function(a,b){ return key(a.date)<key(b.date)?-1:key(a.date)>key(b.date)?1:0; });
   var cumul=0,totD=0,totP=0;
   for (var i=0;i<sorted.length;i++) { var d=parseFloat(sorted[i].dep)||0,p=parseFloat(sorted[i].pai)||0; cumul+=d-p; totD+=d; totP+=p; }
   var amt=document.getElementById("h-amt");
@@ -373,7 +285,7 @@ function render() {
   document.getElementById("h-pai").textContent=fmtMoney(totP);
   document.getElementById("h-ops").textContent=rows.length+" op.";
   var last=sorted[sorted.length-1];
-  document.getElementById("h-last").textContent=last?isoToDisplay(last.date)+" · "+last.lbl:"—";
+  document.getElementById("h-last").textContent=last?last.date+" · "+last.lbl:"—";
   var cnt=rows.length+" opération"+(rows.length!==1?"s":"");
   document.getElementById("rcnt-d").textContent=cnt;
   document.getElementById("rcnt-m").textContent=cnt;
@@ -388,7 +300,7 @@ function showAlert(msg) {
 }
 
 document.addEventListener("keydown",function(e){ if(e.key==="Enter"&&document.activeElement.closest(".fbody")) saveRow(); });
-loadData();
+render();
 </script>
 </body>
 </html>
